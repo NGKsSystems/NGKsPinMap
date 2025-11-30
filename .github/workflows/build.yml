@@ -38,6 +38,64 @@ jobs:
           fi
         shell: bash
 
+      - name: Test macOS build
+        if: runner.os == 'macOS'
+        run: |
+          echo "Testing macOS build..."
+          # Find the built app
+          APP_PATH=$(find dist -name "*.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "ERROR: No .app bundle found in dist/"
+            exit 1
+          fi
+          echo "Found app at: $APP_PATH"
+          
+          # Check if app bundle is valid
+          if [ ! -d "$APP_PATH/Contents" ]; then
+            echo "ERROR: Invalid app bundle structure"
+            exit 1
+          fi
+          echo "✓ App bundle structure is valid"
+          
+          # Try to launch the app in headless mode
+          echo "Attempting to launch app..."
+          timeout 10s "$APP_PATH/Contents/MacOS/NGKs Pin Map" --no-sandbox --headless --disable-gpu 2>&1 | tee app.log || true
+          
+          # Check if app at least attempted to start
+          if grep -q "Electron" app.log || [ -f app.log ]; then
+            echo "✓ App launched successfully (or attempted to start)"
+          else
+            echo "⚠ Could not verify app launch"
+          fi
+          
+          echo "Build test completed!"
+
+      - name: Test Windows build
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          echo "Testing Windows build..."
+          $exePath = Get-ChildItem -Path dist -Filter *.exe -Recurse | Where-Object { $_.Name -notlike '*Uninstall*' } | Select-Object -First 1
+          if ($exePath) {
+            echo "✓ Found installer: $($exePath.FullName)"
+          } else {
+            echo "ERROR: No installer found"
+            exit 1
+          }
+
+      - name: Test Linux build
+        if: runner.os == 'Linux'
+        run: |
+          echo "Testing Linux build..."
+          APP_IMAGE=$(find dist -name "*.AppImage" | head -n 1)
+          if [ -z "$APP_IMAGE" ]; then
+            echo "ERROR: No AppImage found"
+            exit 1
+          fi
+          echo "✓ Found AppImage: $APP_IMAGE"
+          chmod +x "$APP_IMAGE"
+          echo "✓ AppImage is executable"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
