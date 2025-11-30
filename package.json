@@ -30,7 +30,8 @@
     },
     "mac": {
       "target": "dmg",
-      "icon": "icon.icns"
+      "icon": "icon.icns",
+      "arch": ["x64"]
     },
     "linux": {
       "target": "AppImage",
