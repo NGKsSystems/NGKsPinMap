@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGKs Pin Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>NGKs Pin Map</h1>
+            <p>Location-based Subscriber Management</p>
+            <div class="header-actions">
+                <button id="settings-btn" class="btn-icon" title="Settings">⚙️</button>
+                <button id="import-btn" class="btn-secondary" title="Import Data">Import</button>
+                <button id="export-btn" class="btn-success" title="Export Data">Export</button>
+            </div>
+        </header>
+
+        <main>
+            <div id="map" class="map"></div>
+
+            <div class="controls">
+                <button id="add-pin-btn" class="btn btn-primary">+ Add Pin</button>
+            </div>
+        </main>
+
+        <!-- Add Pin Modal -->
+        <div id="pin-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Subscriber Pin</h2>
+                    <button class="modal-close" id="modal-close">&times;</button>
+                </div>
+                <form id="pin-form" class="modal-form">
+                    <div class="form-section">
+                        <h3>Account Information</h3>
+                        <div class="form-group">
+                            <label for="user-name">User Name <span class="required">*</span></label>
+                            <input type="text" id="user-name" required placeholder="e.g., john_doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="full-name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="full-name" required placeholder="e.g., John Doe">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Tier Level</h3>
+                        <div class="form-group tier-buttons">
+                            <button type="button" class="tier-btn" data-tier="member">👤 Member</button>
+                            <button type="button" class="tier-btn" data-tier="subscriber">⭐ Subscriber</button>
+                            <button type="button" class="tier-btn" data-tier="viewer">👁️ Viewer</button>
+                        </div>
+                        <input type="hidden" id="tier-level" value="">
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Location</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="country">Country <span class="required">*</span></label>
+                                <div class="custom-select" id="country-wrapper">
+                                    <input type="text" class="select-input" id="country" placeholder="Search and select country..." required>
+                                    <div class="select-dropdown" id="country-dropdown"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State/Province</label>
+                                <div class="custom-select" id="state-wrapper">
+                                    <input type="text" class="select-input" id="state" placeholder="Search and select state...">
+                                    <div class="select-dropdown" id="state-dropdown"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City/Town</label>
+                                <div class="custom-select" id="city-wrapper">
+                                    <input type="text" class="select-input" id="city" placeholder="Search and select city...">
+                                    <div class="select-dropdown" id="city-dropdown"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location-notes">City/Town (outside of US)</label>
+                                <input type="text" id="location-notes" placeholder="e.g., Paris, Tokyo, London">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Contact Information</h3>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="password" id="phone" placeholder="e.g., +1 (555) 123-4567" style="flex: 1;">
+                                <button type="button" id="phone-toggle-form" class="btn-icon-toggle" title="Show/Hide phone">👁️</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Additional Notes</label>
+                            <textarea id="notes" placeholder="Any additional information..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add Pin to Map</button>
+                        <button type="button" class="btn btn-secondary" id="form-cancel">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="modal-close" id="settings-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h3>Storage Information</h3>
+                        <div class="info-row">
+                            <label>Storage Location:</label>
+                            <span id="storage-location">Browser localStorage</span>
+                        </div>
+                        <div class="info-row">
+                            <label>Storage Key:</label>
+                            <span id="storage-key">ngks_pins</span>
+                        </div>
+                        <div class="info-row">
+                            <label>Data Format:</label>
+                            <span id="storage-format">JSON</span>
+                        </div>
+                        <div class="info-row">
+                            <label>Pins Stored:</label>
+                            <span id="pins-count">0</span>
+                        </div>
+                        <div class="info-row">
+                            <label>Storage Size:</label>
+                            <span id="storage-size">0 bytes</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Data Management</h3>
+                        <p class="info-text">Clear all stored pins and reset the application to default state.</p>
+                        <button type="button" class="btn btn-danger" id="clear-data-btn">Clear All Data</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="settings-done-btn">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <img src="assets/ngkssystems_logo.png" alt="NGKs Systems Logo" class="footer-logo" id="footer-logo">
+            <p>&copy; 2025 NGKs Systems. Built with Electron + Leaflet.</p>
+        </footer>
+
+        <!-- Logo Modal -->
+        <div id="logo-modal" class="modal hidden">
+            <div class="logo-modal-content">
+                <button class="modal-close" id="logo-modal-close">&times;</button>
+                <img src="assets/ngkssystems_logo.png" alt="NGKs Systems Logo" class="expanded-logo">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

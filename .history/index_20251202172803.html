@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGKs Pin Map</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>NGKs Pin Map</h1>
+            <p>Interactive Pin Mapping Application</p>
+        </header>
+
+        <main>
+            <div class="map-container">
+                <div id="map" class="map">
+                    <!-- Map content will be rendered here -->
+                    <div class="map-placeholder">
+                        <h2>Pin Map Interface</h2>
+                        <p>This is where the interactive pin map will be displayed.</p>
+                        <div class="pin-grid">
+                            <div class="pin" data-id="1">📍 Pin 1</div>
+                            <div class="pin" data-id="2">📍 Pin 2</div>
+                            <div class="pin" data-id="3">📍 Pin 3</div>
+                            <div class="pin" data-id="4">📍 Pin 4</div>
+                            <div class="pin" data-id="5">📍 Pin 5</div>
+                            <div class="pin" data-id="6">📍 Pin 6</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <input type="text" id="pin-name" placeholder="Enter pin name" class="pin-input">
+                <button id="add-pin" class="btn btn-primary">Add Pin</button>
+                <button id="clear-pins" class="btn btn-secondary">Clear All</button>
+                <button id="export-data" class="btn btn-success">Export Data</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 NGKs Systems. Built with Electron.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

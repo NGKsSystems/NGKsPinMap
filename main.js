@@ -17,10 +17,8 @@ function createWindow() {
   // Load the app
   mainWindow.loadFile('index.html');
 
-  // Open DevTools in development
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.webContents.openDevTools();
-  }
+  // Open DevTools
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished initialization

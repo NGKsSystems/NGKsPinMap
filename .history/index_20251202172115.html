@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGKs Pin Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>NGKs Pin Map</h1>
+            <p>Interactive Pin Mapping Application</p>
+        </header>
+
+        <main>
+            <div class="map-container">
+                <div id="map" class="map"></div>
+            </div>
+
+            <div class="controls">
+                <button id="add-pin" class="btn btn-primary">Add Pin</button>
+                <button id="clear-pins" class="btn btn-secondary">Clear All</button>
+                <button id="export-data" class="btn btn-success">Export Data</button>
+            </div>
+        </main>
+
+        <div id="pin-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Add Pin</h2>
+                <form id="pin-form">
+                    <label for="modal-pin-name">Name:</label>
+                    <input type="text" id="modal-pin-name" required>
+                    <label for="pin-description">Description:</label>
+                    <textarea id="pin-description"></textarea>
+                    <button type="submit" class="btn btn-primary">Add Pin</button>
+                </form>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 NGKs Systems. Built with Electron.</p>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

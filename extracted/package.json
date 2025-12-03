@@ -1,0 +1,8 @@
+{
+  "name": "ngks-pin-map",
+  "version": "1.0.0",
+  "description": "NGKs Pin Map Electron Application",
+  "main": "main.js",
+  "author": "NGKs Systems",
+  "license": "MIT"
+}
